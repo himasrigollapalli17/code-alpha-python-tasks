@@ -1,59 +1,47 @@
 import random
 
-# List of predefined words
-words =input("enter word")
+# List of words
+words = ["python", "programming", "computer", "hangman", "developer"]
 
-# Select a random word
-secret_word = random.choice(words)
-
-# Create blanks for the word
-guessed_word = ["_"] * len(secret_word)
-
-# Store guessed letters
+# Choose a random word
+word = random.choice(words)
 guessed_letters = []
-
-# Number of wrong attempts
 wrong_guesses = 0
-max_wrong = 6
+max_wrong_guesses = 6
 
-print("🎮 Welcome to Hangman Game!")
+print("Welcome to Hangman!")
 
-# Game loop
-while wrong_guesses < max_wrong and "_" in guessed_word:
+while wrong_guesses < max_wrong_guesses:
+    # Display the word with underscores for unguessed letters
+    display_word = ""
+    for letter in word:
+        if letter in guessed_letters:
+            display_word += letter + " "
+        else:
+            display_word += "_ "
+    print("\nWord:", display_word)
 
-    print("\nWord:", " ".join(guessed_word))
-    print("Wrong guesses left:", max_wrong - wrong_guesses)
+    # Check if the word is completely guessed
+    if "_" not in display_word:
+        print("Congratulations! You guessed the word:", word)
+        break
 
-    # Take input from user
-    letter = input("Enter a letter: ").lower()
+    guess = input("Enter a letter: ").lower()
 
-    # Check if already guessed
-    if letter in guessed_letters:
-        print("You already guessed that letter!")
+    # Validate input
+    if len(guess) != 1 or not guess.isalpha():
+        print("Please enter a single alphabet letter.")
         continue
 
-    # Add letter to guessed list
-    guessed_letters.append(letter)
+    if guess in guessed_letters:
+        print("You already guessed that letter.")
+        continue
 
-    # Check if letter is in the secret word
-    if letter in secret_word:
-        print("Correct Guess!")
+    guessed_letters.append(guess)
 
-        # Reveal correct letters
-        i = 0
-        while i < len(secret_word):
-            if secret_word[i] == letter:
-                guessed_word[i] = letter
-            i += 1
-
-    else:
-        print("Wrong Guess!")
+    if guess not in word:
         wrong_guesses += 1
+        print(f"Wrong guess! Attempts left: {max_wrong_guesses - wrong_guesses}")
 
-# Final result
-if "_" not in guessed_word:
-    print("\n🎉 Congratulations! You guessed the word:")
-    print(secret_word)
 else:
-    print("\n❌ Game Over!")
-    print("The word was:", secret_word)
+    print("\nGame Over! The word was:", word)
